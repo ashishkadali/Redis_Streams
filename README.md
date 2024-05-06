@@ -52,10 +52,12 @@ Add data to group
 3. Check consumers and readData into consumer
 ```
    consumerName =await RedisConnect.xinfo("CONSUMERS", streamName, groupName);
-    xreadgroup("GROUP", "ChatStreamGroup", consumerName, "COUNT", 100, "BLOCK", "1000", "STREAMS", streamName, '>');
-    COUNT = 100 meand per consumer 100 messages
-  BLOCk = 1000 means 1 sec hold
-  ">" is mandatory
+
+   Redis.xreadgroup("GROUP", "ChatStreamGroup", consumerName, "COUNT", 100, "BLOCK", "1000", "STREAMS", streamName, '>');
+
+   COUNT = 100 meand per consumer 100 messages
+   BLOCk = 1000 means 1 sec hold
+   ">" is mandatory
 ```
 5. SendingS Acknowlgment, if ack didnt send it will pending state. 
  ```
