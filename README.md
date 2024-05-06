@@ -87,7 +87,7 @@ when we recive message from socket. if the message is group, check group is pres
   
     
 }
-   ```
+   
 
 3. Check consumers and readData into consumer
 ```
