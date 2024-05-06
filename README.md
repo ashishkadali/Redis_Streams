@@ -47,6 +47,47 @@ when we recive message from socket. if the message is group, check group is pres
     }
      }
    ```
+   ```
+     const consumerData = async (streamName, groupName) =>{
+
+    const checkconsumersdata= await connectToRedis.xinfo("CONSUMERS", streamName , groupName);
+
+    if(checkconsumersdata && checkconsumersdata?.length > 0){
+        let consimderdata = []
+
+        for (const consumer of checkconsumersdata) {
+            const [status] = consumer;
+            if(status !== "pending"){
+                consimderdata.push(consumer);
+                return
+            }
+        }
+    
+        if(consimderdata.length > 0){
+            return consimderdata[0]
+    
+        }else{
+            const groupDetails = connectToRedis.xinfo("GROUPS", streamName );
+    
+            for (let i = 0; i < 20; i++) {
+                consumerName = `Consumer:${groupDetails.length + i + 1}`;
+                const newConsumer = await connectToRedis.xgroup("CREATECONSUMER", streamName, groupName, consumerName);
+            }
+            consumerData(streamName, groupName);
+        }
+    }else{
+        const groupDetails = connectToRedis.xinfo("GROUPS", streamName );
+    
+        for (let i = 0; i < 20; i++) {
+            consumerName = `Consumer:${groupDetails.length + i + 1}`;
+            const newConsumer = await connectToRedis.xgroup("CREATECONSUMER", streamName, groupName, consumerName);
+        }
+        consumerData(streamName, groupName);
+    }
+  
+    
+}
+   ```
 
 3. Check consumers and readData into consumer
 ```
