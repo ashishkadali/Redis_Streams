@@ -12,21 +12,27 @@ Redis Stream is data structure in redis for handling messages data. This data st
 ## ADD Data to Stream
 when we recive message from socket. if the message is group, check group is present or not. If not creat a group and add data to it.
 
-> Redis.xgroup("CREAT", StreamName, GeoupName "0-0" MKSTREAM
-> "0-0" if group is not created it will create with 0 lenght
-> MKSTREAM  you can create it automatically with length of 0 by using the optional MKSTREAM.
-
+```
+ Redis.xgroup("CREAT", StreamName, GeoupName "0-0" MKSTREAM
+  "0-0" if group is not created it will create with 0 lenght
+   MKSTREAM  you can create it automatically with length of 0 by using the optional MKSTREAM.
+```
 Add data to group
-> Redis.xadd(streamName, * , MessageName, MesaageData);
-> * it will create ID automatically
 
+```
+  Redis.xadd(streamName, * , MessageName, MesaageData);
+   * it will create ID automatically
+```
 ### Syntax
-> XADD mystream * message "Hello"
-
+```
+ XADD mystream * message "Hello"
+```
 ## Recive Data to Stream
 
 1. create consumser
-  > async function createConsumer(streamName : any, groupName : any) {
+ 
+   ```
+     async function createConsumer(streamName : any, groupName : any) {
     try {
 
         const groupDetails: any = await RedisConnect.xinfo("GROUPS", streamName);
@@ -40,13 +46,18 @@ Add data to group
     } catch (e) {
         console.log(e, "ERROR");
     }
-}
+     }
+   ```
 
-3. 
-   > xreadgroup("GROUP", "ChatStreamGroup", consumerName, "COUNT", 100, "BLOCK", "1000", "STREAMS", streamName, '>');
-   >  COUNT = 100 meand per consumer 100 messages
-   >  BLOCk = 1000 means 1 sec hold
-    > ">" is mandatory
-
-
-
+3. Check consumers and readData into consumer
+```
+   consumerName =await RedisConnect.xinfo("CONSUMERS", streamName, groupName);
+    xreadgroup("GROUP", "ChatStreamGroup", consumerName, "COUNT", 100, "BLOCK", "1000", "STREAMS", streamName, '>');
+    COUNT = 100 meand per consumer 100 messages
+  BLOCk = 1000 means 1 sec hold
+  ">" is mandatory
+```
+5. SendingS Acknowlgment, if ack didnt send it will pending state. 
+ ```
+  let ack = await RedisConnect.xack(streamName, 'ChatStreamGroup', messageId);
+```
