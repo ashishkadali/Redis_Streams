@@ -17,7 +17,6 @@ when we recive message from socket. if the message is group, check group is pres
   "0-0" if group is not created it will create with 0 lenght
    MKSTREAM  you can create it automatically with length of 0 by using the optional MKSTREAM.
 ```
-Add data to group
 
 ```
   Redis.xadd(streamName, * , MessageName, MesaageData);
