@@ -99,7 +99,8 @@ when we recive message from socket. if the message is group, check group is pres
    BLOCk = 1000 means 1 sec hold
    ">" is mandatory
 ```
-5. SendingS Acknowlgment, if ack didnt send it will pending state. 
+5. SendingS Acknowlgment, if ack didnt send it will pending state.
+   Acknowlgment is used for the data is updated in database
  ```
   let ack = await RedisConnect.xack(streamName, 'ChatStreamGroup', messageId);
 ```
